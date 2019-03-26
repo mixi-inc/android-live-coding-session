@@ -15,8 +15,10 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import dev.mixi.raichou.databinding.ActivityMediumPostBinding
 import dev.mixi.raichou.databinding.ItemMediumBinding
+import java.io.File
 
 private const val REQ_CODE_STORAGE_PERMISSION = 1
 
@@ -58,17 +60,29 @@ class MediumPostActivity : AppCompatActivity() {
     }
 
     private fun showList() {
-        binding.list.adapter = MyAdapter(emptyList())
         binding.list.layoutManager = GridLayoutManager(this, 3)
         binding.list.setHasFixedSize(true)
 
-        val cursor = contentResolver.query(
+        contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             arrayOf(MediaStore.Images.ImageColumns.DATA),
             null,
             null,
             null
-        )
+        ).use { cursor ->
+            when (cursor) {
+                null -> TODO("should handle error")
+                else -> {
+                    val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+                    val list = arrayListOf<Uri>() // ArrayList<Uri>()
+                    while (cursor.moveToNext()) {
+                        val filePath = cursor.getString(index)
+                        list.add(Uri.fromFile(File(filePath)))
+                    }
+                    binding.list.adapter = MyAdapter(list)
+                }
+            }
+        }
     }
 
     companion object {
@@ -96,7 +110,9 @@ class MyAdapter(private val uris: List<Uri>) : RecyclerView.Adapter<MyHolder>() 
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-        //holder.binding.image
+        Picasso.get()
+            .load(uris[position])
+            .into(holder.binding.image)
     }
 
 }
