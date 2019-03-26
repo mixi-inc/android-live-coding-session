@@ -9,12 +9,14 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import dev.mixi.raichou.databinding.ActivityMediumPostBinding
 import dev.mixi.raichou.databinding.ItemMediumBinding
@@ -53,7 +55,7 @@ class MediumPostActivity : AppCompatActivity() {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     showList()
                 } else {
-                    // TODO: show dialog
+                    Snackbar.make(binding.root, "Please give me a permission", Snackbar.LENGTH_LONG).show()
                 }
             }
         }
@@ -71,7 +73,9 @@ class MediumPostActivity : AppCompatActivity() {
             null
         ).use { cursor ->
             when (cursor) {
-                null -> TODO("should handle error")
+                // if the content provider returns null in an unexpected situation
+                // https://stackoverflow.com/questions/13080540/what-causes-androids-contentresolver-query-to-return-null
+                null -> Toast.makeText(this, "Failed to get cursor", Toast.LENGTH_LONG).show()
                 else -> {
                     val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
                     val list = arrayListOf<Uri>() // ArrayList<Uri>()
