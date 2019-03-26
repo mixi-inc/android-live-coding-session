@@ -79,7 +79,7 @@ class MediumPostActivity : AppCompatActivity() {
                         val filePath = cursor.getString(index)
                         list.add(Uri.fromFile(File(filePath)))
                     }
-                    binding.list.adapter = MyAdapter(list)
+                    binding.list.adapter = ImageListAdapter(list)
                 }
             }
         }
@@ -90,26 +90,24 @@ class MediumPostActivity : AppCompatActivity() {
     }
 }
 
-class MyHolder(val binding: ItemMediumBinding) : RecyclerView.ViewHolder(binding.root) {
+class ImageHolder(val binding: ItemMediumBinding) : RecyclerView.ViewHolder(binding.root)
 
-}
-
-class MyAdapter(private val uris: List<Uri>) : RecyclerView.Adapter<MyHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
+class ImageListAdapter(private val uris: List<Uri>) : RecyclerView.Adapter<ImageHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
         val binding = DataBindingUtil.inflate<ItemMediumBinding>(
             LayoutInflater.from(parent.context),
             R.layout.item_medium,
             parent,
             false
         )
-        return MyHolder(binding)
+        return ImageHolder(binding)
     }
 
     override fun getItemCount(): Int {
         return uris.size
     }
 
-    override fun onBindViewHolder(holder: MyHolder, position: Int) {
+    override fun onBindViewHolder(holder: ImageHolder, position: Int) {
         Picasso.get()
             .load(uris[position])
             .into(holder.binding.image)
