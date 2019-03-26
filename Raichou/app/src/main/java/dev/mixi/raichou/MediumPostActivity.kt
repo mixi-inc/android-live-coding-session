@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableBoolean
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -97,7 +98,7 @@ class MediumPostActivity : AppCompatActivity() {
 class ImageHolder(val binding: ItemMediumBinding) : RecyclerView.ViewHolder(binding.root)
 
 class ImageViewModel(val uri: Uri) {
-    var selected: Boolean = false
+    var selected: ObservableBoolean = ObservableBoolean(false)
 }
 
 class ImageListAdapter(private val images: List<ImageViewModel>) : RecyclerView.Adapter<ImageHolder>() {

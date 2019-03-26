@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-
+        <variable name="image" type="dev.mixi.raichou.ImageViewModel"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
@@ -21,6 +21,7 @@
                 android:id="@+id/chk_select"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="@={image.selected}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
         />
