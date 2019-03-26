@@ -78,10 +78,10 @@ class MediumPostActivity : AppCompatActivity() {
                 null -> Toast.makeText(this, "Failed to get cursor", Toast.LENGTH_LONG).show()
                 else -> {
                     val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-                    val list = arrayListOf<Uri>() // ArrayList<Uri>()
+                    val list = arrayListOf<ImageViewModel>() // ArrayList<Uri>()
                     while (cursor.moveToNext()) {
                         val filePath = cursor.getString(index)
-                        list.add(Uri.fromFile(File(filePath)))
+                        list.add(ImageViewModel(Uri.fromFile(File(filePath))))
                     }
                     binding.list.adapter = ImageListAdapter(list)
                 }
@@ -96,7 +96,11 @@ class MediumPostActivity : AppCompatActivity() {
 
 class ImageHolder(val binding: ItemMediumBinding) : RecyclerView.ViewHolder(binding.root)
 
-class ImageListAdapter(private val uris: List<Uri>) : RecyclerView.Adapter<ImageHolder>() {
+class ImageViewModel(val uri: Uri) {
+    var selected: Boolean = false
+}
+
+class ImageListAdapter(private val images: List<ImageViewModel>) : RecyclerView.Adapter<ImageHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
         val binding = DataBindingUtil.inflate<ItemMediumBinding>(
             LayoutInflater.from(parent.context),
@@ -108,12 +112,12 @@ class ImageListAdapter(private val uris: List<Uri>) : RecyclerView.Adapter<Image
     }
 
     override fun getItemCount(): Int {
-        return uris.size
+        return images.size
     }
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
         Picasso.get()
-            .load(uris[position])
+            .load(images[position].uri)
             .into(holder.binding.image)
     }
 

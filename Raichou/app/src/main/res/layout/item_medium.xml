@@ -17,5 +17,12 @@
                    app:layout_constraintStart_toStartOf="parent"
                    app:layout_constraintEnd_toEndOf="parent"
                    app:layout_constraintDimensionRatio="H,1:1"/>
+        <CheckBox
+                android:id="@+id/chk_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+        />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
