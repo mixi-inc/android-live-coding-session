@@ -8,13 +8,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ObservableBoolean
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -76,10 +76,10 @@ class MediumPostActivity : AppCompatActivity() {
             // if the content provider returns null in an unexpected situation
             // https://stackoverflow.com/questions/13080540/what-causes-androids-contentresolver-query-to-return-null
             val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-            val list = arrayListOf<ImageViewModel>() // ArrayList<Uri>()
+            val list = arrayListOf<ImageItemViewModel>() // ArrayList<Uri>()
             while (cursor.moveToNext()) {
                 val filePath = cursor.getString(index)
-                list.add(ImageViewModel(Uri.fromFile(File(filePath))))
+                list.add(ImageItemViewModel(Uri.fromFile(File(filePath))))
             }
             binding.list.adapter = ImageListAdapter(list)
         } ?: Toast.makeText(this, "Failed to get cursor", Toast.LENGTH_LONG).show()
@@ -92,11 +92,14 @@ class MediumPostActivity : AppCompatActivity() {
 
 class ImageHolder(val binding: ItemMediumBinding) : RecyclerView.ViewHolder(binding.root)
 
-class ImageViewModel(val uri: Uri) {
-    var selected: ObservableBoolean = ObservableBoolean(false)
+class ImageItemViewModel(val uri: Uri) {
+    var selected: Boolean = false
+    fun onSelectionChanged(view: View, checked: Boolean) {
+        selected = checked
+    }
 }
 
-class ImageListAdapter(private val images: List<ImageViewModel>) : RecyclerView.Adapter<ImageHolder>() {
+class ImageListAdapter(private val imageItemViewModels: List<ImageItemViewModel>) : RecyclerView.Adapter<ImageHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
         val binding = DataBindingUtil.inflate<ItemMediumBinding>(
             LayoutInflater.from(parent.context),
@@ -108,13 +111,14 @@ class ImageListAdapter(private val images: List<ImageViewModel>) : RecyclerView.
     }
 
     override fun getItemCount(): Int {
-        return images.size
+        return imageItemViewModels.size
     }
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
         Picasso.get()
-            .load(images[position].uri)
+            .load(imageItemViewModels[position].uri)
             .into(holder.binding.image)
+        holder.binding.imageViewModel = imageItemViewModels[position]
     }
 
 }
