@@ -56,6 +56,7 @@ class MediumPostActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.medium_post_activity, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.post -> {
@@ -67,10 +68,12 @@ class MediumPostActivity : AppCompatActivity() {
         }
 
     }
+
     fun post() {
         val adapter = binding.list.adapter as ImageListAdapter
         val list = adapter.getSelectedImageList()
     }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -118,7 +121,8 @@ class ImageItemViewModel(val uri: Uri) {
     var selected: ObservableBoolean = ObservableBoolean(false)
 }
 
-class ImageListAdapter(private val imageItemViewModels: List<ImageItemViewModel>) : RecyclerView.Adapter<ImageHolder>() {
+class ImageListAdapter(private val imageItemViewModels: List<ImageItemViewModel>) :
+    RecyclerView.Adapter<ImageHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
         val binding = DataBindingUtil.inflate<ItemMediumBinding>(
             LayoutInflater.from(parent.context),

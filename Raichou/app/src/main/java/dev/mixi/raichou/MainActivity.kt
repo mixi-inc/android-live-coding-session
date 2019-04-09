@@ -1,9 +1,8 @@
 package dev.mixi.raichou
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dev.mixi.raichou.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
