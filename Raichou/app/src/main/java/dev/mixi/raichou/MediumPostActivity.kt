@@ -56,8 +56,20 @@ class MediumPostActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.medium_post_activity, menu)
         return super.onCreateOptionsMenu(menu)
     }
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.post -> {
+                post()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+
+        }
+
+    }
+    fun post() {
+        val adapter = binding.list.adapter as ImageListAdapter
+        val list = adapter.getSelectedImageList()
     }
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -128,4 +140,9 @@ class ImageListAdapter(private val imageItemViewModels: List<ImageItemViewModel>
         holder.binding.imageViewModel = imageItemViewModels[position]
     }
 
+    fun getSelectedImageList(): List<ImageItemViewModel> {
+        return imageItemViewModels.filter { model ->
+            model.selected.get()
+        }
+    }
 }
