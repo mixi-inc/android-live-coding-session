@@ -7,12 +7,16 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableBoolean
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -99,10 +103,7 @@ class MediumPostActivity : AppCompatActivity() {
 class ImageHolder(val binding: ItemMediumBinding) : RecyclerView.ViewHolder(binding.root)
 
 class ImageItemViewModel(val uri: Uri) {
-    var selected: Boolean = false
-    fun onSelectionChanged(view: View, checked: Boolean) {
-        selected = checked
-    }
+    var selected: ObservableBoolean = ObservableBoolean(false)
 }
 
 class ImageListAdapter(private val imageItemViewModels: List<ImageItemViewModel>) : RecyclerView.Adapter<ImageHolder>() {
