@@ -72,22 +72,17 @@ class MediumPostActivity : AppCompatActivity() {
             null,
             null,
             null
-        ).use { cursor ->
-            when (cursor) {
-                // if the content provider returns null in an unexpected situation
-                // https://stackoverflow.com/questions/13080540/what-causes-androids-contentresolver-query-to-return-null
-                null -> Toast.makeText(this, "Failed to get cursor", Toast.LENGTH_LONG).show()
-                else -> {
-                    val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-                    val list = arrayListOf<ImageViewModel>() // ArrayList<Uri>()
-                    while (cursor.moveToNext()) {
-                        val filePath = cursor.getString(index)
-                        list.add(ImageViewModel(Uri.fromFile(File(filePath))))
-                    }
-                    binding.list.adapter = ImageListAdapter(list)
-                }
+        )?.use { cursor ->
+            // if the content provider returns null in an unexpected situation
+            // https://stackoverflow.com/questions/13080540/what-causes-androids-contentresolver-query-to-return-null
+            val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            val list = arrayListOf<ImageViewModel>() // ArrayList<Uri>()
+            while (cursor.moveToNext()) {
+                val filePath = cursor.getString(index)
+                list.add(ImageViewModel(Uri.fromFile(File(filePath))))
             }
-        }
+            binding.list.adapter = ImageListAdapter(list)
+        } ?: Toast.makeText(this, "Failed to get cursor", Toast.LENGTH_LONG).show()
     }
 
     companion object {
