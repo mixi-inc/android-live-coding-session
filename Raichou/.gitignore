@@ -11,3 +11,7 @@
 /build
 /captures
 .externalNativeBuild
+
+# Include shared settings
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
