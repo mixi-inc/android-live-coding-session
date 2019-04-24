@@ -25,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import dev.mixi.raichou.databinding.ActivityMediumPostBinding
 import dev.mixi.raichou.databinding.ItemMediumBinding
+import timber.log.Timber
 import java.io.File
 import java.util.UUID
 
@@ -36,6 +37,8 @@ class MediumPostActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.plant(Timber.DebugTree())
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_medium_post)
 
         if (ContextCompat.checkSelfPermission(
@@ -98,14 +101,14 @@ class MediumPostActivity : AppCompatActivity() {
                                     ).show()
                                 }
                                 .addOnFailureListener { e ->
-                                    Toast.makeText(this, "Failed to add data: $e", Toast.LENGTH_SHORT).show()
+                                    Timber.d("Failed to add data: $e")
                                 }
                         }
                         .addOnFailureListener { e ->
-                            Toast.makeText(this, "Failed to get download URL: $e", Toast.LENGTH_SHORT).show()
+                            Timber.d("Failed to get download URL: $e")
                         }
                 }.addOnFailureListener { e ->
-                    Toast.makeText(this, "Failed to upload image: $e", Toast.LENGTH_SHORT).show()
+                    Timber.d("Failed to upload image: $e")
                 }
         }
     }
