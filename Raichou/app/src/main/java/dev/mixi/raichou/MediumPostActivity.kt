@@ -20,6 +20,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import dev.mixi.raichou.databinding.ActivityMediumPostBinding
@@ -75,11 +76,34 @@ class MediumPostActivity : AppCompatActivity() {
         val adapter = binding.list.adapter as ImageListAdapter
         val list = adapter.getSelectedImageList()
         val imageRef = FirebaseStorage.getInstance().reference.child("images")
+        val db = FirebaseFirestore.getInstance()
         list.forEach { image ->
             val ref = imageRef.child("${image.uri.lastPathSegment}-${UUID.randomUUID()}")
             ref.putFile(image.uri)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Uploaded image ${image.uri}", Toast.LENGTH_SHORT).show()
+                    ref.downloadUrl
+                        .addOnSuccessListener { downloadUri ->
+                            val data = hashMapOf(
+                                "name" to ref.name,
+                                "url" to downloadUri.toString()
+                            )
+                            db.collection("images")
+                                .add(data)
+                                .addOnSuccessListener { documentRef ->
+                                    Toast.makeText(
+                                        this,
+                                        "Successfully added data: ${documentRef.id}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(this, "Failed to add data: $e", Toast.LENGTH_SHORT).show()
+                                }
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(this, "Failed to get download URL: $e", Toast.LENGTH_SHORT).show()
+                        }
                 }.addOnFailureListener { e ->
                     Toast.makeText(this, "Failed to upload image: $e", Toast.LENGTH_SHORT).show()
                 }
