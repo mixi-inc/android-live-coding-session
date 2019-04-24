@@ -20,10 +20,12 @@ import androidx.databinding.ObservableBoolean
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import dev.mixi.raichou.databinding.ActivityMediumPostBinding
 import dev.mixi.raichou.databinding.ItemMediumBinding
 import java.io.File
+import java.util.UUID
 
 private const val REQ_CODE_STORAGE_PERMISSION = 1
 
@@ -72,6 +74,16 @@ class MediumPostActivity : AppCompatActivity() {
     fun post() {
         val adapter = binding.list.adapter as ImageListAdapter
         val list = adapter.getSelectedImageList()
+        val imageRef = FirebaseStorage.getInstance().reference.child("images")
+        list.forEach { image ->
+            val ref = imageRef.child("${image.uri.lastPathSegment}-${UUID.randomUUID()}")
+            ref.putFile(image.uri)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Uploaded image ${image.uri}", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener { e ->
+                    Toast.makeText(this, "Failed to upload image: $e", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
