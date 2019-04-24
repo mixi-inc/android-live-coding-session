@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "793969578858",
+    "firebase_url": "https://raichou.firebaseio.com",
+    "project_id": "raichou",
+    "storage_bucket": "raichou.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:793969578858:android:38bcc2fc54ac64ba",
+        "android_client_info": {
+          "package_name": "dev.mixi.raichou"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "793969578858-uhoi3gocacrgj59gicb5qd1t4984a99v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1u2Avkw8_EvcUEpr8TKtfDubNAG84zVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "793969578858-uhoi3gocacrgj59gicb5qd1t4984a99v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
