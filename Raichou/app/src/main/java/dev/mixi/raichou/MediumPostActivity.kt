@@ -40,6 +40,7 @@ class MediumPostActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_medium_post)
+        setSupportActionBar(binding.toolbar)
 
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -54,7 +55,6 @@ class MediumPostActivity : AppCompatActivity() {
             return
         }
 
-        setSupportActionBar(binding.toolbar)
         showList()
     }
 
