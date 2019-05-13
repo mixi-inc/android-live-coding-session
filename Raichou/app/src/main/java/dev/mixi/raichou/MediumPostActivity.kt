@@ -178,6 +178,8 @@ class ImageListAdapter(private val imageItemViewModels: List<ImageItemViewModel>
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
         Picasso.get()
             .load(imageItemViewModels[position].uri)
+            .fit()
+            .centerCrop()
             .into(holder.binding.image)
         holder.binding.imageViewModel = imageItemViewModels[position]
     }
