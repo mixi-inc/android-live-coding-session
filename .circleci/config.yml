@@ -15,6 +15,9 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
       - run:
+          name: update bundler
+          command: gem install bundler -v $BUNDLER_VERSION 
+      - run:
           name: bundle install
           command: bundle install
       - run:
