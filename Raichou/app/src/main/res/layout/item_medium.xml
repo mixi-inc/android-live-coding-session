@@ -5,8 +5,8 @@
     <data>
 
         <variable
-                name="imageViewModel"
-                type="dev.mixi.raichou.ImageItemViewModel"/>
+                name="selected"
+                type="androidx.databinding.ObservableBoolean"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +30,7 @@
                 android:id="@+id/chk_select"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="@={imageViewModel.selected}"
+                android:checked="@={selected}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 />

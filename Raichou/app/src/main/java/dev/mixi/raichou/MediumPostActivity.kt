@@ -7,24 +7,17 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ObservableBoolean
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.squareup.picasso.Picasso
 import dev.mixi.raichou.databinding.ActivityMediumPostBinding
-import dev.mixi.raichou.databinding.ItemMediumBinding
 import timber.log.Timber
 import java.io.File
 import java.util.UUID
@@ -126,7 +119,6 @@ class MediumPostActivity : AppCompatActivity() {
     }
 
     private fun showList() {
-        binding.list.layoutManager = GridLayoutManager(this, 3)
         binding.list.setHasFixedSize(true)
 
         contentResolver.query(
@@ -139,54 +131,18 @@ class MediumPostActivity : AppCompatActivity() {
             // if the content provider returns null in an unexpected situation
             // https://stackoverflow.com/questions/13080540/what-causes-androids-contentresolver-query-to-return-null
             val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-            val list = arrayListOf<ImageItemViewModel>() // ArrayList<Uri>()
+            val list = arrayListOf<ImageItemModel>() // ArrayList<Uri>()
             while (cursor.moveToNext()) {
                 val filePath = cursor.getString(index)
-                list.add(ImageItemViewModel(Uri.fromFile(File(filePath))))
+                list.add(ImageItemModel(Uri.fromFile(File(filePath))))
             }
-            binding.list.adapter = ImageListAdapter(list)
+            binding.list.adapter = ImageListAdapter().apply {
+                submitList(list)
+            }
         } ?: Toast.makeText(this, "Failed to get cursor", Toast.LENGTH_LONG).show()
     }
 
     companion object {
         fun createIntent(context: Context) = Intent(context, MediumPostActivity::class.java)
-    }
-}
-
-class ImageHolder(val binding: ItemMediumBinding) : RecyclerView.ViewHolder(binding.root)
-
-class ImageItemViewModel(val uri: Uri) {
-    var selected: ObservableBoolean = ObservableBoolean(false)
-}
-
-class ImageListAdapter(private val imageItemViewModels: List<ImageItemViewModel>) :
-    RecyclerView.Adapter<ImageHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
-        val binding = DataBindingUtil.inflate<ItemMediumBinding>(
-            LayoutInflater.from(parent.context),
-            R.layout.item_medium,
-            parent,
-            false
-        )
-        return ImageHolder(binding)
-    }
-
-    override fun getItemCount(): Int {
-        return imageItemViewModels.size
-    }
-
-    override fun onBindViewHolder(holder: ImageHolder, position: Int) {
-        Picasso.get()
-            .load(imageItemViewModels[position].uri)
-            .fit()
-            .centerCrop()
-            .into(holder.binding.image)
-        holder.binding.imageViewModel = imageItemViewModels[position]
-    }
-
-    fun getSelectedImageList(): List<ImageItemViewModel> {
-        return imageItemViewModels.filter { model ->
-            model.selected.get()
-        }
     }
 }
