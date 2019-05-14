@@ -39,6 +39,8 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_medium_post)
+        binding.list.setHasFixedSize(true)
+        setSupportActionBar(binding.toolbar)
 
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -52,8 +54,6 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             )
             return
         }
-
-        setSupportActionBar(binding.toolbar)
         showList()
     }
 
@@ -119,8 +119,6 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     private fun showList() {
-        binding.list.setHasFixedSize(true)
-
         contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             arrayOf(MediaStore.Images.ImageColumns.DATA),
