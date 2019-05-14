@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,6 +29,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 import java.util.UUID
@@ -68,7 +70,8 @@ class PostFragment : Fragment(), Toolbar.OnMenuItemClickListener, CoroutineScope
         else -> super.onOptionsItemSelected(item)
     }
 
-    private fun post() {
+    private fun post() = launch {
+        binding.progressBar.isVisible = true
         val adapter = binding.list.adapter as ImageListAdapter
         val list = adapter.getSelectedImageList()
         val imageRef = FirebaseStorage.getInstance().reference.child("images")
@@ -76,7 +79,7 @@ class PostFragment : Fragment(), Toolbar.OnMenuItemClickListener, CoroutineScope
 
         list.forEach { image ->
             val ref = imageRef.child("${image.uri.lastPathSegment}-${UUID.randomUUID()}")
-            launch(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
                     ref.putFile(image.uri).await()
                     val downloadUri = ref.downloadUrl.await()
@@ -94,6 +97,8 @@ class PostFragment : Fragment(), Toolbar.OnMenuItemClickListener, CoroutineScope
                 }
             }
         }
+        binding.progressBar.isVisible = false
+        Snackbar.make(binding.root, "Successfully", Snackbar.LENGTH_LONG).show()
     }
 
     private fun showListWithPermissionCheck() {
