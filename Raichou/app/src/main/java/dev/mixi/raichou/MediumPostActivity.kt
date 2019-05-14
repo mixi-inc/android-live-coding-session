@@ -42,19 +42,7 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         binding.list.setHasFixedSize(true)
         setSupportActionBar(binding.toolbar)
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQ_CODE_STORAGE_PERMISSION
-            )
-            return
-        }
-        showList()
+        showListWithPermissionCheck()
     }
 
     override fun onDestroy() {
@@ -105,16 +93,18 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            REQ_CODE_STORAGE_PERMISSION -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    showList()
-                } else {
-                    Snackbar.make(binding.root, "Please give me a permission", Snackbar.LENGTH_LONG).show()
-                }
-            }
+    private fun showListWithPermissionCheck() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQ_CODE_STORAGE_PERMISSION
+            )
+            showList()
         }
     }
 
@@ -138,6 +128,19 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                 submitList(list)
             }
         } ?: Toast.makeText(this, "Failed to get cursor", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQ_CODE_STORAGE_PERMISSION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    showList()
+                } else {
+                    Snackbar.make(binding.root, "Please give me a permission", Snackbar.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     companion object {
