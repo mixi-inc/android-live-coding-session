@@ -16,15 +16,22 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.storage.FirebaseStorage
 import dev.mixi.raichou.databinding.ActivityMediumPostBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.io.File
 import java.util.UUID
 
 private const val REQ_CODE_STORAGE_PERMISSION = 1
 
-class MediumPostActivity : AppCompatActivity() {
+class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     private lateinit var binding: ActivityMediumPostBinding
 
@@ -50,6 +57,11 @@ class MediumPostActivity : AppCompatActivity() {
         showList()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        cancel()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.medium_post_activity, menu)
         return super.onCreateOptionsMenu(menu)
@@ -62,9 +74,7 @@ class MediumPostActivity : AppCompatActivity() {
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
-
         }
-
     }
 
     fun post() {
@@ -72,36 +82,26 @@ class MediumPostActivity : AppCompatActivity() {
         val list = adapter.getSelectedImageList()
         val imageRef = FirebaseStorage.getInstance().reference.child("images")
         val db = FirebaseFirestore.getInstance()
+
         list.forEach { image ->
             val ref = imageRef.child("${image.uri.lastPathSegment}-${UUID.randomUUID()}")
-            ref.putFile(image.uri)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Uploaded image ${image.uri}", Toast.LENGTH_SHORT).show()
-                    ref.downloadUrl
-                        .addOnSuccessListener { downloadUri ->
-                            val data = hashMapOf(
-                                "name" to ref.name,
-                                "url" to downloadUri.toString()
-                            )
-                            db.collection("images")
-                                .add(data)
-                                .addOnSuccessListener { documentRef ->
-                                    Toast.makeText(
-                                        this,
-                                        "Successfully added data: ${documentRef.id}",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                                .addOnFailureListener { e ->
-                                    Timber.d("Failed to add data: $e")
-                                }
-                        }
-                        .addOnFailureListener { e ->
-                            Timber.d("Failed to get download URL: $e")
-                        }
-                }.addOnFailureListener { e ->
-                    Timber.d("Failed to upload image: $e")
+            launch(Dispatchers.IO) {
+                try {
+                    ref.putFile(image.uri).await()
+                    val downloadUri = ref.downloadUrl.await()
+                    val documentRef = db.collection("images").add(
+                        hashMapOf(
+                            "name" to ref.name,
+                            "url" to downloadUri.toString()
+                        )
+                    ).await()
+
+                    Timber.d("Successfully added data: ${documentRef.id}")
+
+                } catch (e: FirebaseFirestoreException) {
+                    Timber.d("Failed to add data: $e")
                 }
+            }
         }
     }
 
