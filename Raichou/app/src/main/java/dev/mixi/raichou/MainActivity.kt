@@ -20,16 +20,15 @@ class MainActivity : AppCompatActivity() {
         db.collection("images")
             .get()
             .addOnSuccessListener { snapshot ->
-                snapshot.forEach { doc ->
-                    val name: String = doc.data.get("name") as String
-                    val url: String = doc.data.get("url") as String
-                    Timber.d("$name, $url")
-                    Picasso.get()
-                        .load(url)
-                        .fit()
-                        .centerInside()
-                        .into(binding.image)
-                }
+                val data = snapshot.first().data
+                val name = data["name"] as String
+                val url = data["url"] as String
+                Picasso.get()
+                    .load(url)
+                    .fit()
+                    .centerInside()
+                    .into(binding.image)
+                Timber.d("$name, $url")
             }
     }
 }
