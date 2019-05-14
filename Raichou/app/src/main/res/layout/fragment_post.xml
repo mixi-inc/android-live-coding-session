@@ -6,20 +6,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MediumPostActivity">
+            tools:context=".post.PostFragment">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/list"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                tools:itemCount="30"
-                tools:listitem="@layout/item_medium"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="3"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:itemCount="30"
+                tools:listitem="@layout/item_medium"/>
 
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -27,7 +27,9 @@
                 android:layout_width="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@string/app_name">
         </androidx.appcompat.widget.Toolbar>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

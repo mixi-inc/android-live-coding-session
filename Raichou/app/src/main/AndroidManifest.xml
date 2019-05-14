@@ -14,7 +14,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".MediumPostActivity">
+        <activity android:name=".post.PostFragment">
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>

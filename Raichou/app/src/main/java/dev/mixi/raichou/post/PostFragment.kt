@@ -1,24 +1,27 @@
-package dev.mixi.raichou
+package dev.mixi.raichou.post
 
-import android.Manifest
-import android.content.Context
-import android.content.Intent
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.Menu
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
+import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.storage.FirebaseStorage
-import dev.mixi.raichou.databinding.ActivityMediumPostBinding
+import dev.mixi.raichou.R
+import dev.mixi.raichou.databinding.FragmentPostBinding
+import dev.mixi.raichou.ui.ImageItemModel
+import dev.mixi.raichou.ui.ImageListAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -31,17 +34,24 @@ import java.util.UUID
 
 private const val REQ_CODE_STORAGE_PERMISSION = 1
 
-class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
+class PostFragment : Fragment(), Toolbar.OnMenuItemClickListener, CoroutineScope by MainScope() {
 
-    private lateinit var binding: ActivityMediumPostBinding
+    private lateinit var binding: FragmentPostBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_medium_post)
+        binding = FragmentPostBinding.inflate(inflater, container, false)
         binding.list.setHasFixedSize(true)
-        setSupportActionBar(binding.toolbar)
+        binding.toolbar.apply {
+            inflateMenu(R.menu.post)
+            setOnMenuItemClickListener(this@PostFragment)
+        }
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         showListWithPermissionCheck()
     }
 
@@ -50,22 +60,15 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         cancel()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.medium_post_activity, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.post -> {
-                post()
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
+    override fun onMenuItemClick(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.post -> {
+            post()
+            true
         }
+        else -> super.onOptionsItemSelected(item)
     }
 
-    fun post() {
+    private fun post() {
         val adapter = binding.list.adapter as ImageListAdapter
         val list = adapter.getSelectedImageList()
         val imageRef = FirebaseStorage.getInstance().reference.child("images")
@@ -94,22 +97,15 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     }
 
     private fun showListWithPermissionCheck() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQ_CODE_STORAGE_PERMISSION
-            )
+        if (ContextCompat.checkSelfPermission(requireActivity(), READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED) {
             showList()
+        } else {
+            requestPermissions(arrayOf(READ_EXTERNAL_STORAGE), REQ_CODE_STORAGE_PERMISSION)
         }
     }
 
     private fun showList() {
-        contentResolver.query(
+        requireActivity().contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             arrayOf(MediaStore.Images.ImageColumns.DATA),
             null,
@@ -127,7 +123,7 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
             binding.list.adapter = ImageListAdapter().apply {
                 submitList(list)
             }
-        } ?: Toast.makeText(this, "Failed to get cursor", Toast.LENGTH_LONG).show()
+        } ?: Toast.makeText(requireActivity(), "Failed to get cursor", Toast.LENGTH_LONG).show()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -141,9 +137,5 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                 }
             }
         }
-    }
-
-    companion object {
-        fun createIntent(context: Context) = Intent(context, MediumPostActivity::class.java)
     }
 }

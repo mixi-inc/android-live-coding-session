@@ -1,4 +1,4 @@
-package dev.mixi.raichou
+package dev.mixi.raichou.ui
 
 import androidx.recyclerview.widget.RecyclerView
 import dev.mixi.raichou.databinding.ItemMediumBinding
