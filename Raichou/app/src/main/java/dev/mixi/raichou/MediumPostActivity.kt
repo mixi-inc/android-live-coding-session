@@ -104,6 +104,7 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                 REQ_CODE_STORAGE_PERMISSION
             )
+        } else {
             showList()
         }
     }
@@ -124,7 +125,7 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                 val filePath = cursor.getString(index)
                 list.add(ImageItemModel(Uri.fromFile(File(filePath))))
             }
-            binding.list.adapter = ImageListAdapter().apply {
+            binding.list.adapter = ImageListAdapter(false).apply {
                 submitList(list)
             }
         } ?: Toast.makeText(this, "Failed to get cursor", Toast.LENGTH_LONG).show()

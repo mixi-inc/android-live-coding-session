@@ -2,13 +2,17 @@ package dev.mixi.raichou
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.firestore.FirebaseFirestore
-import com.squareup.picasso.Picasso
 import dev.mixi.raichou.databinding.ActivityMainBinding
-import timber.log.Timber
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,19 +20,16 @@ class MainActivity : AppCompatActivity() {
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
         binding.btnPost.setOnClickListener { startActivity(MediumPostActivity.createIntent(this)) }
 
-        val db = FirebaseFirestore.getInstance()
-        db.collection("images")
-            .get()
-            .addOnSuccessListener { snapshot ->
-                val data = snapshot.first().data
-                val name = data["name"] as String
-                val url = data["url"] as String
-                Picasso.get()
-                    .load(url)
-                    .fit()
-                    .centerInside()
-                    .into(binding.image)
-                Timber.d("$name, $url")
+        launch(Dispatchers.Main) {
+            val db = FirebaseFirestore.getInstance()
+            val snapshot = db.collection("images").get().await()
+
+            val list = snapshot.map {
+                ImageItemModel(it.data["url"].toString().toUri())
             }
+            binding.list.adapter = ImageListAdapter(selectable = false).apply {
+                submitList(list)
+            }
+        }
     }
 }

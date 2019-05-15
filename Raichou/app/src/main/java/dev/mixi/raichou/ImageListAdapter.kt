@@ -13,7 +13,9 @@ private val ImageModelDiff = object : DiffUtil.ItemCallback<ImageItemModel>() {
     override fun areContentsTheSame(oldItem: ImageItemModel, newItem: ImageItemModel) = oldItem == newItem
 }
 
-class ImageListAdapter : ListAdapter<ImageItemModel, ImageItemHolder>(ImageModelDiff) {
+class ImageListAdapter(
+    private val selectable: Boolean = true
+) : ListAdapter<ImageItemModel, ImageItemHolder>(ImageModelDiff) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageItemHolder {
         val binding = DataBindingUtil.inflate<ItemMediumBinding>(
             LayoutInflater.from(parent.context),
@@ -21,6 +23,7 @@ class ImageListAdapter : ListAdapter<ImageItemModel, ImageItemHolder>(ImageModel
             parent,
             false
         )
+        binding.selectable = selectable
         return ImageItemHolder(binding)
     }
 
