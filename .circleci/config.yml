@@ -45,6 +45,3 @@ jobs:
       - store_artifacts:
           path: Raichou/app/build/test-results
           destination: test-results
-      - store_artifacts:
-          path: Raichou/app/build/outputs/apk
-          destination: apk
