@@ -14,14 +14,6 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "Raichou/build.gradle" }}-{{ checksum "Raichou/app/build.gradle" }}
       - run:
-          name: bundle install
-          command: bundle install
-          working_directory: Raichou
-      - run:
-          name: Danger
-          command: bundle exec danger
-          working_directory: Raichou
-      - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
           working_directory: Raichou
@@ -37,7 +29,7 @@ jobs:
             - ~/.gradle
       - run:
           name: Test
-          command: ./gradlew --stacktrace testDebug
+          command: ./gradlew --stacktrace lint testDebug
           working_directory: Raichou
       - store_artifacts:
           path: Raichou/app/build/reports
