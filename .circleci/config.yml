@@ -1,0 +1,50 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/android:api-28-alpha
+        environment:
+          JAVA_OPTS: -Xmx1536m
+          GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx1536m -XX:+HeapDumpOnOutOfMemoryError"'
+    steps:
+      - checkout
+      - restore_cache:
+          key: sdks-licenses-build-tools-extras-{{ checksum "Raichou/build.gradle" }}-{{ checksum "Raichou/app/build.gradle" }}
+      - restore_cache:
+          key: jars-{{ checksum "Raichou/build.gradle" }}-{{ checksum "Raichou/app/build.gradle" }}
+      - run:
+          name: bundle install
+          command: bundle install
+          working_directory: Raichou
+      - run:
+          name: Danger
+          command: bundle exec danger
+          working_directory: Raichou
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+          working_directory: Raichou
+      - save_cache:
+          key: sdks-licenses-build-tools-extras-{{ checksum "Raichou/build.gradle" }}-{{ checksum "Raichou/app/build.gradle" }}
+          paths:
+            - /opt/android/sdk/licenses
+            - /opt/android/sdk/build-tools
+            - /opt/android/sdk/extras
+      - save_cache:
+          key: jars-{{ checksum "Raichou/build.gradle" }}-{{ checksum "Raichou/app/build.gradle" }}
+          paths:
+            - ~/.gradle
+      - run:
+          name: Test
+          command: ./gradlew --stacktrace testDebug
+          working_directory: Raichou
+      - store_artifacts:
+          path: Raichou/app/build/reports
+          destination: reports
+      - store_artifacts:
+          path: Raichou/app/build/test-results
+          destination: test-results
+      - store_artifacts:
+          path: Raichou/app/build/outputs/apk
+          destination: apk
