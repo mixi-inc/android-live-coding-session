@@ -35,7 +35,9 @@ class HomeListFragment : Fragment(), CoroutineScope by MainScope() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnPost.setOnClickListener { Navigation.findNavController(it).navigate(R.id.to_post) }
+        binding.btnPost.setOnClickListener {
+            Navigation.findNavController(it).navigate(HomeListFragmentDirections.toPost())
+        }
 
         launch(Dispatchers.Main) {
             val db = FirebaseFirestore.getInstance()
