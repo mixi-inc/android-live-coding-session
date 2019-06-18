@@ -44,6 +44,19 @@ class MediumPostFragment : Fragment(), CoroutineScope by MainScope() {
         // Inflate the layout for this fragment
         binding = FragmentMediumPostBinding.inflate(inflater, container, false)
 
+        binding.toolbar.apply {
+            inflateMenu(R.menu.medium_post_activity)
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.post -> {
+                        post()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
+
         return binding.root
     }
 
