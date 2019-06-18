@@ -84,7 +84,11 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                         )
                     ).await()
 
-                    Timber.d("Successfully added data: ${documentRef.id}")
+                    Snackbar.make(
+                        binding.root,
+                        "Successfully added data: ${documentRef.id}",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
 
                 } catch (e: FirebaseFirestoreException) {
                     Timber.d("Failed to add data: $e")
