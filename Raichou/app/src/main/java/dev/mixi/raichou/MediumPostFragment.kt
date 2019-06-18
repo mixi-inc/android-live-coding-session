@@ -65,8 +65,8 @@ class MediumPostFragment : Fragment(), CoroutineScope by MainScope() {
         showListWithPermissionCheck()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         cancel()
     }
 

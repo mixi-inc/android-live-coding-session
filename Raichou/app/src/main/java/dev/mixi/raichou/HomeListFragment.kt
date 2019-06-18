@@ -52,8 +52,8 @@ class HomeListFragment : Fragment(), CoroutineScope by MainScope() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         cancel()
     }
 }
