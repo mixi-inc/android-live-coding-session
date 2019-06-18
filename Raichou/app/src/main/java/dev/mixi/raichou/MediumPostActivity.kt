@@ -125,7 +125,7 @@ class MediumPostActivity : AppCompatActivity(), CoroutineScope by MainScope() {
                 val filePath = cursor.getString(index)
                 list.add(ImageItemModel(Uri.fromFile(File(filePath))))
             }
-            binding.list.adapter = ImageListAdapter(false).apply {
+            binding.list.adapter = ImageListAdapter(selectable = true).apply {
                 submitList(list)
             }
         } ?: Toast.makeText(this, "Failed to get cursor", Toast.LENGTH_LONG).show()
