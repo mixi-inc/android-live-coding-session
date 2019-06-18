@@ -47,6 +47,11 @@ class MediumPostFragment : Fragment(), CoroutineScope by MainScope() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        showListWithPermissionCheck()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         cancel()
