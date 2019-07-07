@@ -42,11 +42,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-storage:18.0.0'
     implementation 'com.google.firebase:firebase-firestore:20.1.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:20.1.0'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation "androidx.navigation:navigation-fragment:2.1.0-alpha06"
     implementation "androidx.navigation:navigation-ui:2.1.0-alpha06"
     implementation "androidx.navigation:navigation-fragment-ktx:2.1.0-alpha06"
     implementation "androidx.navigation:navigation-ui-ktx:2.1.0-alpha06"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0-rc01'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-alpha02'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
