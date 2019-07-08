@@ -1,4 +1,4 @@
-package dev.mixi.raichou
+package dev.mixi.raichou.mediumpost
 
 import android.app.Application
 import android.net.Uri
@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.liveData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import dev.mixi.raichou.widget.ImageItemModel
 import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.util.UUID

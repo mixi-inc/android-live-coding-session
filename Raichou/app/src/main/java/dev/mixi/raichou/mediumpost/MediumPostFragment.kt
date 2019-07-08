@@ -1,4 +1,4 @@
-package dev.mixi.raichou
+package dev.mixi.raichou.mediumpost
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import com.google.android.material.snackbar.Snackbar
+import dev.mixi.raichou.widget.ImageListAdapter
+import dev.mixi.raichou.R
 import dev.mixi.raichou.databinding.FragmentMediumPostBinding
 
 /**

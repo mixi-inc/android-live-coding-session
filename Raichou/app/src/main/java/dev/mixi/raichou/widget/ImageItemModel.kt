@@ -1,4 +1,4 @@
-package dev.mixi.raichou
+package dev.mixi.raichou.widget
 
 import android.net.Uri
 import androidx.databinding.ObservableBoolean

@@ -7,7 +7,7 @@
 
     <fragment
             android:id="@+id/home_list_fragment"
-            android:name="dev.mixi.raichou.HomeListFragment"
+            android:name="dev.mixi.raichou.homelist.HomeListFragment"
             tools:layout="@layout/fragment_home_list"
             android:label="HomeListFragment">
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
             android:id="@+id/medium_post_fragment"
-            android:name="dev.mixi.raichou.MediumPostFragment"
+            android:name="dev.mixi.raichou.mediumpost.MediumPostFragment"
             tools:layout="@layout/fragment_medium_post"
             android:label="MediumPostFragment"/>
 </navigation>

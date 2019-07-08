@@ -1,4 +1,4 @@
-package dev.mixi.raichou
+package dev.mixi.raichou.homelist
 
 
 import android.os.Bundle
@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.Navigation
 import dev.mixi.raichou.databinding.FragmentHomeListBinding
+import dev.mixi.raichou.widget.ImageListAdapter
 
 /**
  * A simple [Fragment] subclass.
