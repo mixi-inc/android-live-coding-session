@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.google.firebase.firestore.FirebaseFirestore
 import dev.mixi.raichou.databinding.FragmentHomeListBinding
@@ -22,6 +23,7 @@ import kotlinx.coroutines.tasks.await
  */
 class HomeListFragment : Fragment(), CoroutineScope by MainScope() {
 
+    val viewModel by viewModels<HomeListViewModel>()
     lateinit var binding: FragmentHomeListBinding
 
     override fun onCreateView(
