@@ -12,15 +12,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import com.google.android.material.snackbar.Snackbar
 import dev.mixi.raichou.databinding.FragmentMediumPostBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass.
  */
-class MediumPostFragment : Fragment(), CoroutineScope by MainScope() {
+class MediumPostFragment : Fragment() {
 
     lateinit var binding: FragmentMediumPostBinding
     val viewModel by viewModels<MediumPostViewModel>()
@@ -55,11 +52,6 @@ class MediumPostFragment : Fragment(), CoroutineScope by MainScope() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showListWithPermissionCheck()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        cancel()
     }
 
     fun post() {
