@@ -26,6 +26,12 @@ android {
     lintOptions {
         lintConfig file("../lint.xml")
     }
+
+    kotlinOptions {
+        freeCompilerArgs += [
+                "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        ]
+    }
 }
 
 dependencies {
@@ -48,9 +54,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0-alpha02'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.2.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-RC'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-RC'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.0-RC'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
