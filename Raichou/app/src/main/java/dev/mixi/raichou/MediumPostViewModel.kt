@@ -62,5 +62,7 @@ class MediumPostViewModel(application: Application) : AndroidViewModel(applicati
         object Loading : PostResult()
         class Posted(val documentId: String) : PostResult()
         class Error(val e: Exception) : PostResult()
+
+        val isLoading: Boolean get() = this == Loading
     }
 }
