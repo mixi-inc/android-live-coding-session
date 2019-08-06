@@ -10,14 +10,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.Navigation
 import dev.mixi.raichou.databinding.FragmentHomeListBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 
 /**
  * A simple [Fragment] subclass.
  */
-class HomeListFragment : Fragment(), CoroutineScope by MainScope() {
+class HomeListFragment : Fragment() {
 
     val viewModel by viewModels<HomeListViewModel>()
     lateinit var binding: FragmentHomeListBinding
@@ -42,10 +39,5 @@ class HomeListFragment : Fragment(), CoroutineScope by MainScope() {
                 submitList(list)
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        cancel()
     }
 }
